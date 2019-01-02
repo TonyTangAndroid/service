@@ -1,66 +1,80 @@
 package edu.cs4730.foregroundservicedemo;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-/**
- * Main activity doesn't really do much, but start the service and then finish.
- * In oreo to run a background service when the app is not running it must
- * startForegroundService(Intent)  in the activity
- * in service, make a notification low or higher. persistent.
- * and startForground (int id, Notification notification )
- */
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
-    public static String id1 = "test_channel_01";
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ServiceStatusBroadcastReceiver.Callback {
+
+    private TextView tv_hint;
+    private Button btn_action;
+    private ServiceStatusBroadcastReceiver receiver = new ServiceStatusBroadcastReceiver(this, this);
+
+    public static Intent constructIntent(Context context) {
+        return new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        createchannel();  //needed for the persistent notification created in service.
-
-        //IntentService start with 5 random number toasts
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent number5 = new Intent(getBaseContext(), MyForeGroundService.class);
-                number5.putExtra("times", 5);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    startForegroundService(number5);
-                } else {
-                    //lower then Oreo, just start the service.
-                    startService(number5);
-                }
-                finish();
-            }
-        });
+        bindView();
     }
 
-    /**
-     * for API 26+ create notification channels
-     */
-    private void createchannel() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ServiceStatusBroadcastReceiver.register(this, receiver);
+        updateUI(((App) getApplication()).getHelper().started());
+    }
 
-            NotificationChannel mChannel = new NotificationChannel(id1,
-                getString(R.string.channel_name),  //name of the channel
-                NotificationManager.IMPORTANCE_LOW);   //importance level
-            //important level: default is is high on the phone.  high is urgent on the phone.  low is medium, so none is low?
-            // Configure the notification channel.
-            mChannel.setDescription(getString(R.string.channel_description));
-            mChannel.enableLights(true);
-            // Sets the notification light color for notifications posted to this channel, if the device supports this feature.
-            mChannel.setShowBadge(true);
-            nm.createNotificationChannel(mChannel);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ServiceStatusBroadcastReceiver.unregister(this, receiver);
+    }
+
+    private void startForegroundService() {
+        DemoService.startDemoServiceOnForeground(this);
+    }
+
+    private void stopForegroundService() {
+        DemoService.stopDemoService(this);
+    }
+
+    private void updateUI(boolean started) {
+        if (started) {
+            tv_hint.setText(R.string.tv_hint_stop_service);
+            btn_action.setText(R.string.stop);
+        } else {
+            tv_hint.setText(R.string.tv_hint_start_service);
+            btn_action.setText(R.string.start);
         }
     }
 
+    private void bindView() {
+        tv_hint = findViewById(R.id.tv_hint);
+        btn_action = findViewById(R.id.btn_action);
+        btn_action.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if (((App) getApplication()).getHelper().started()) {
+            stopForegroundService();
+        } else {
+            startForegroundService();
+        }
+    }
+
+    @Override
+    public void onUpdate(boolean started) {
+        updateUI(started);
+    }
 }
