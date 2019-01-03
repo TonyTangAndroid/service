@@ -11,6 +11,7 @@ public class ServiceAbortionActionBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        new SharedPreferenceHelper(context).update(false);
         context.stopService(DemoService.constructDemoService(context));
     }
 

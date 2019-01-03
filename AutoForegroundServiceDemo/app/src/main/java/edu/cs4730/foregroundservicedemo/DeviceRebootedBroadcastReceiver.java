@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import hugo.weaving.DebugLog;
 
@@ -20,6 +21,14 @@ public class DeviceRebootedBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void onDeviceRebooted(Context context) {
+        if (new SharedPreferenceHelper(context).enabled()) {
+            startService(context);
+        } else {
+            Log.d("DeviceRebooted", "Service has not been enabled");
+        }
+    }
+
+    private void startService(Context context) {
         Intent serviceToBeStarted = DemoService.constructDemoService(context);
         if (supportToStartForegroundService()) {
             startServiceDirectly(context, serviceToBeStarted);

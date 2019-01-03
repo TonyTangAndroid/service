@@ -66,11 +66,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (((App) getApplication()).getHelper().started()) {
+        boolean started = ((App) getApplication()).getHelper().started();
+        if (started) {
             stopForegroundService();
         } else {
             startForegroundService();
         }
+        updateServiceEnabledStatus(!started);
+    }
+
+    private void updateServiceEnabledStatus(boolean enabled) {
+        new SharedPreferenceHelper(getApplicationContext()).update(enabled);
     }
 
     @Override
