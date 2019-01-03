@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView tv_hint;
     private Button btn_action;
-    private ServiceStatusBroadcastReceiver receiver = new ServiceStatusBroadcastReceiver(this, this);
+    private ServiceStatusBroadcastReceiver receiver = new ServiceStatusBroadcastReceiver(this);
 
     public static Intent constructIntent(Context context) {
         return new Intent(context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

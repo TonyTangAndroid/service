@@ -10,7 +10,7 @@ public class DemoServiceStatusTracker implements ServiceStatusBroadcastReceiver.
     private boolean started;
 
     public DemoServiceStatusTracker(Context context) {
-        ServiceStatusBroadcastReceiver.register(context, new ServiceStatusBroadcastReceiver(context, this));
+        ServiceStatusBroadcastReceiver.register(context, new ServiceStatusBroadcastReceiver(this));
     }
 
     public boolean started() {

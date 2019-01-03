@@ -4,21 +4,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import hugo.weaving.DebugLog;
+import timber.log.Timber;
 
 @DebugLog
 public class ServiceStatusBroadcastReceiver extends BroadcastReceiver {
 
     private static final String ACTION_NOTIFY_FOREGROUND_SERVICE = BuildConfig.APPLICATION_ID + ".ACTION_NOTIFY_FOREGROUND_SERVICE";
     private static final String EXTRA_STATUS = "extra_status";
-    private final Context context;
     private final Callback callback;
 
-    public ServiceStatusBroadcastReceiver(Context context, Callback callback) {
-        this.context = context;
+    public ServiceStatusBroadcastReceiver(Callback callback) {
         this.callback = callback;
     }
 
@@ -42,7 +40,7 @@ public class ServiceStatusBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void log(boolean started) {
-        Toast.makeText(context, "ForegroundService started:" + started, Toast.LENGTH_SHORT).show();
+        Timber.d("ForegroundService started:%s", started);
     }
 
     public boolean started(Intent intent) {

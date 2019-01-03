@@ -35,7 +35,7 @@ public class DemoService extends Service {
     }
 
     private void startForegroundService() {
-        notificationHelper.startForegroundService(this);
+        notificationHelper.bindAsForegroundService(this);
     }
 
     @DebugLog

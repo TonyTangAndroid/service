@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "edu.cs4730.foregroundservicedemo"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -31,6 +31,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.github.TonyTangAndroid:FileLogger:1.0.1'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
 }

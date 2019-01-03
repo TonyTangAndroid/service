@@ -70,10 +70,10 @@ class NotificationHelper {
     }
 
 
-    public void startForegroundService(Service foregroundService) {
+    public void bindAsForegroundService(Service service) {
         String title = context.getString(R.string.app_name);
         String content = context.getString(R.string.foreground_service_is_running);
         Notification notification = buildOngoingNotification(title, content).build();
-        foregroundService.startForeground(CHANNEL_ID.hashCode(), notification);
+        service.startForeground(CHANNEL_ID.hashCode(), notification);
     }
 }

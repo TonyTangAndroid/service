@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import hugo.weaving.DebugLog;
+import timber.log.Timber;
 
 @DebugLog
 public class DeviceRebootedBroadcastReceiver extends BroadcastReceiver {
@@ -24,7 +24,7 @@ public class DeviceRebootedBroadcastReceiver extends BroadcastReceiver {
         if (new SharedPreferenceHelper(context).enabled()) {
             startService(context);
         } else {
-            Log.d("DeviceRebooted", "Service has not been enabled");
+            Timber.d("Service has not been enabled");
         }
     }
 
