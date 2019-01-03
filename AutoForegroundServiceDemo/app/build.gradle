@@ -7,7 +7,7 @@ ext {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "edu.cs4730.foregroundservicedemo"
+        applicationId "edu.cs4730.auto.start.foregroundservicedemo"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
